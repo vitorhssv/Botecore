@@ -69,6 +69,49 @@ try:
         """
     )
     logger.info("Tables were created/already exists")
+    logger.info("Checking commands...")
+
+    # set defaults
+    for command_default in all_commands_defaults:
+        # check if the command is already in the database, if it is then skip to the next command
+        cursor.execute(
+            "SELECT command_id FROM commands WHERE command_id = ?",
+            (command_default["command_id"],),
+        )
+        command = cursor.fetchone()
+
+        if command is None:
+            # add default command
+            cursor.execute(
+                "INSERT INTO commands VALUES (?, ?, ?, ?);",
+                (
+                    command_default["command_id"],
+                    command_default["command_handler"],
+                    command_default["scope"],
+                    command_default["enabled"],
+                ),
+            )
+
+            # add default message
+            for message_default in command_default["messages"]:
+                cursor.execute(
+                    "INSERT INTO messages VALUES (?, ?, ?);",
+                    (
+                        message_default["message_id"],
+                        command_default["command_id"],
+                        message_default["message"],
+                    ),
+                )
+            logger.info(
+                f"Command {command_default['command_id']} was added to the database"
+            )
+        else:
+            # command is already in the database, skip to the next one
+            logger.info(
+                f"Command {command_default['command_id']} is already in the database"
+            )
+            continue
+
     conn.commit()
 except sqlite3.Error as e:
     # log error
