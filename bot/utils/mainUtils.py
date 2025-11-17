@@ -51,7 +51,7 @@ def get_message(identifier: str, get_random: bool = False) -> str | None:
 def get_handlers() -> dict[str, str] | None:
     """Gets all handlers from the database in a dict with the command_id"""
     try:
-        conn = sqlite3.connect(Path("config/botConfig.db"))
+        conn = sqlite3.connect(Path("botConfig.db"))
         logger.info("Connected to database")
         cursor = conn.cursor()
 
