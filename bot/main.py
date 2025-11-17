@@ -1,4 +1,5 @@
 import logging
+import sqlite3
 from importlib import import_module
 from os import environ, listdir
 from pathlib import Path
@@ -29,6 +30,54 @@ for module in modules:
     imported = import_module(f"modules.{module}")
     all_handlers.extend(imported.handlers)
     all_commands_defaults.extend(imported.commands_defaults)
+
+# database check & setup
+try:
+    # connect to the database
+    conn = sqlite3.connect(Path("config/botConfig.db"))
+    logger.info("Database connected/created")
+    cursor = conn.cursor()
+
+    # create tables
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS commands (
+            command_id TEXT PRIMARY KEY,
+            command_handler TEXT UNIQUE,
+            scope INT NOT NULL,
+            enabled BOOL NOT NULL
+        );
+        """
+    )
+
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS messages (
+            message_id TEXT PRIMARY KEY,
+            command_id TEXT NOT NULL,
+            message TEXT NOT NULL
+        );
+        """
+    )
+
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS allowed (
+            id INT PRIMARY KEY,
+            type TEXT NOT NULL
+        );
+        """
+    )
+    logger.info("Tables were created/already exists")
+    conn.commit()
+except sqlite3.Error as e:
+    # log error
+    logger.error(e)
+finally:
+    # close connection with the database
+    if "conn" in locals() and conn:
+        conn.close()
+        logger.info("Connection closed")
 
 
 def main() -> None:
