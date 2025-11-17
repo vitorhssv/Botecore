@@ -46,3 +46,32 @@ def get_message(identifier: str, get_random: bool = False) -> str | None:
         if "conn" in locals() and conn:
             conn.close()
             logger.info("Connection closed")
+
+
+def get_handlers() -> dict[str, str] | None:
+    """Gets all handlers from the database in a dict with the command_id"""
+    try:
+        conn = sqlite3.connect(Path("config/botConfig.db"))
+        logger.info("Connected to database")
+        cursor = conn.cursor()
+
+        # gets the handler
+        cursor.execute("SELECT command_id, command_handler FROM commands")
+
+        handlers = cursor.fetchall()
+        handlers_dict: dict[str, str] = {}
+        for handler in handlers:
+            new_handler = {f"{handler[0]}": f"{handler[1]}"}
+            handlers_dict.update(new_handler)
+
+        return handlers_dict
+
+    except sqlite3.Error as e:
+        # log error
+        logger.error(e)
+
+    finally:
+        # close connection with the database
+        if "conn" in locals() and conn:
+            conn.close()
+            logger.info("Connection closed")
