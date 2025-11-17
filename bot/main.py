@@ -1,5 +1,7 @@
 import logging
-from os import environ
+from importlib import import_module
+from os import environ, listdir
+from pathlib import Path
 
 from dotenv import load_dotenv
 from telegram import Update
@@ -17,11 +19,23 @@ else:
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger("botStartScript")
 
+# create a list for default info
+all_handlers = []
+all_commands_defaults: list[dict[str, str]] = []
+
+# make a list of the installed modules and add all of it's handlers and commands_defaults into another list
+modules = listdir(Path("./modules"))
+for module in modules:
+    imported = import_module(f"modules.{module}")
+    all_handlers.extend(imported.handlers)
+    all_commands_defaults.extend(imported.commands_defaults)
+
 
 def main() -> None:
     """Start the bot"""
     # create the bot and add it's handlers
     application = Application.builder().token(environ["BOT_TOKEN"]).build()
+    application.add_handlers(all_handlers)
     # start the bot
     application.run_polling(allowed_updates=Update.ALL_TYPES)
 
