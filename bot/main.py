@@ -34,7 +34,7 @@ for module in modules:
 # database check & setup
 try:
     # connect to the database
-    conn = sqlite3.connect(Path("config/botConfig.db"))
+    conn = sqlite3.connect(Path("botConfig.db"))
     logger.info("Database connected/created")
     cursor = conn.cursor()
 
