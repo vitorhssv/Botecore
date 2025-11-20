@@ -1,11 +1,11 @@
 import sqlite3
-from os import execv
 from pathlib import Path
-from sys import argv, executable
 
 from telegram import Update
 from telegram.ext import CommandHandler, ContextTypes
 from utils import *
+
+from .functions import restart
 
 logger = set_logger("coreFunctions")
 
@@ -22,19 +22,19 @@ async def coreFunctions_restart(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> None:
     """Restarts the bot to apply any changes"""
-    try:
-        await update.message.reply_html(get_message("coreFunctions_restarting_message"))
-        execv(executable, ["python"] + argv)
-    except (IndexError, ValueError) as e:
+    await update.message.reply_html(get_message("coreFunctions_restarting_message"))
+    if not restart():
         await update.message.reply_html(
             get_message("coreFunctions_restartError_message")
         )
-        logger.error(e)
 
 
 handlers = get_handlers()
 coreFunctions_start_handler = CommandHandler(
     handlers["coreFunctions_start"], coreFunctions_start
+)
+coreFunctions_resetCommands_handler = CommandHandler(
+    handlers["coreFunctions_resetCommands"], coreFunctions_resetCommands
 )
 coreFunctions_restart_handler = CommandHandler(
     handlers["coreFunctions_restart"], coreFunctions_restart
