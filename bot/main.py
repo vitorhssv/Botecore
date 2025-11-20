@@ -44,8 +44,8 @@ try:
         CREATE TABLE IF NOT EXISTS commands (
             command_id TEXT PRIMARY KEY,
             command_handler TEXT UNIQUE,
-            scope INT NOT NULL,
-            enabled BOOL NOT NULL
+            command_description TEXT,
+            scope STR NOT NULL
         );
         """
     )
