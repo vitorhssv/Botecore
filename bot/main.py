@@ -1,8 +1,9 @@
 import logging
 import sqlite3
 from importlib import import_module
-from os import environ, listdir
+from os import environ, execv, listdir
 from pathlib import Path
+from sys import argv, executable
 
 from dotenv import load_dotenv
 from telegram import Update
@@ -24,12 +25,20 @@ logger = logging.getLogger("botStartScript")
 all_handlers = []
 all_commands_defaults: list[dict[str, str]] = []
 
+# checks if the user wants to update the database or start the bot
+database_update = True
+if len(argv) > 1:
+    if argv[1] == "-start":
+        database_update = False
+
 # make a list of the installed modules and add all of it's handlers and commands_defaults into another list
 modules = listdir(Path("./modules"))
 for module in modules:
     imported = import_module(f"modules.{module}")
-    all_handlers.extend(imported.handlers)
-    all_commands_defaults.extend(imported.commands_defaults)
+    if not database_update:
+        all_handlers.extend(imported.handlers)
+    else:
+        all_commands_defaults.extend(imported.commands_defaults)
     logger.info(f"Information from the {module} module was imported")
 
 # database check & setup
@@ -87,8 +96,8 @@ try:
                 (
                     command_default["command_id"],
                     command_default["command_handler"],
+                    command_default["command_description"],
                     command_default["scope"],
-                    command_default["enabled"],
                 ),
             )
 
@@ -132,5 +141,11 @@ def main() -> None:
     application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and not database_update:
     main()
+else:
+    try:
+        logger.info("Database updated, starting bot")
+        execv(executable, ["python"] + argv + ["-start"])
+    except (ValueError, IndexError) as e:
+        logger.error(e)
