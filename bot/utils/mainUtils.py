@@ -9,7 +9,7 @@ def set_logger(module_name: str) -> logging.Logger:
     return logging.getLogger(module_name)
 
 
-logger = set_logger("mainUtils")
+logger = set_logger("main_utils")
 
 
 def get_message(identifier: str, get_random: bool = False) -> str | None:

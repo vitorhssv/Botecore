@@ -16,23 +16,19 @@ from telegram import (
 from telegram.ext import CommandHandler, ContextTypes
 from utils import *
 
-from .functions import restart
+from .functions import restart_and_update
 
 load_dotenv(override=True)
-logger = set_logger("coreFunctions_commands")
+logger = set_logger("coreFunctions:commands")
 
 
 # basic "hard-coded" commands, these commands should'nt be deleted or disabled...
-async def coreFunctions_start(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> None:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send an introduction to the bot"""
-    await update.message.reply_html(get_message("coreFunctions_start_message"))
+    await update.message.reply_html(get_message("coreFunctions:start_message"))
 
 
-async def coreFunctions_setCommands(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> None:
+async def set_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Set the bot's commands"""
     scopes = [
         "default",
@@ -100,7 +96,7 @@ async def coreFunctions_setCommands(
         # log error
         logger.error(e)
         await update.message.reply_html(
-            get_message("coreFunctions_setCommandsError_message")
+            get_message("coreFunctions:set_commands_error_message")
         )
     finally:
         # close connection with the database
@@ -108,15 +104,13 @@ async def coreFunctions_setCommands(
             conn.close()
             logger.info("Connection closed")
         await update.message.reply_html(
-            get_message("coreFunctions_setCommands_message")
+            get_message("coreFunctions:set_commands_complete")
         )
 
 
-async def coreFunctions_resetCommands(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> None:
+async def reset_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Deletes every command-related entry from the database"""
-    cached_reset_message = get_message("coreFunctions_resetCommands_message")
+    cached_reset_message = get_message("coreFunctions:reset_commands_message")
 
     try:
         # connect to the database
@@ -145,40 +139,34 @@ async def coreFunctions_resetCommands(
         # log error
         logger.error(e)
         await update.message.reply_html(
-            get_message("coreFunctions_resetCommandsError_message")
+            get_message("coreFunctions:reset_commands_error_message")
         )
     finally:
         # close connection with the database
         if "conn" in locals() and conn:
             conn.close()
             logger.info("Connection closed")
-        if not restart():
+        if not restart_and_update():
             await update.message.reply_html(
-                get_message("coreFunctions_restartError_message")
+                get_message("coreFunctions:restart_error_message")
             )
 
 
-async def coreFunctions_restart(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> None:
+async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Restarts the bot to apply any changes"""
-    await update.message.reply_html(get_message("coreFunctions_restarting_message"))
-    if not restart():
+    await update.message.reply_html(get_message("coreFunctions:restarting_message"))
+    if not restart_and_update():
         await update.message.reply_html(
-            get_message("coreFunctions_restartError_message")
+            get_message("coreFunctions:restart_error_message")
         )
 
 
 handlers = get_handlers()
-coreFunctions_start_handler = CommandHandler(
-    handlers["coreFunctions_start"], coreFunctions_start
+start_handler = CommandHandler(handlers["coreFunctions:start"], start)
+set_commands_handler = CommandHandler(
+    handlers["coreFunctions:set_commands"], set_commands
 )
-coreFunctions_setCommands_handler = CommandHandler(
-    handlers["coreFunctions_setCommands"], coreFunctions_setCommands
+reset_commands_handler = CommandHandler(
+    handlers["coreFunctions:reset_commands"], reset_commands
 )
-coreFunctions_resetCommands_handler = CommandHandler(
-    handlers["coreFunctions_resetCommands"], coreFunctions_resetCommands
-)
-coreFunctions_restart_handler = CommandHandler(
-    handlers["coreFunctions_restart"], coreFunctions_restart
-)
+restart_handler = CommandHandler(handlers["coreFunctions:restart"], restart)

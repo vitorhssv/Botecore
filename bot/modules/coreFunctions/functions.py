@@ -6,7 +6,7 @@ from utils import *
 logger = set_logger("coreFunctions")
 
 
-def restart():
+def restart_and_update():
     try:
         # restarts the bot without the -start argument so the database is updated
         execv(executable, ["python"] + argv[:-1])

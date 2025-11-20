@@ -19,7 +19,7 @@ else:
     logging.basicConfig(format=log_format, level=logging.WARNING)
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
-logger = logging.getLogger("botStartScript")
+logger = logging.getLogger("bot_start_script")
 
 # create a list for default info
 all_handlers = []
@@ -73,7 +73,7 @@ try:
         """
         CREATE TABLE IF NOT EXISTS allowed (
             id INT PRIMARY KEY,
-            type TEXT NOT NULL
+            name TEXT NOT NULL
         );
         """
     )
