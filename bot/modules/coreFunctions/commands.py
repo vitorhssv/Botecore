@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 from telegram import (
     Bot,
     BotCommand,
-    BotCommandScope,
     BotCommandScopeAllChatAdministrators,
     BotCommandScopeAllGroupChats,
     BotCommandScopeAllPrivateChats,
@@ -20,7 +19,7 @@ from utils import *
 from .functions import restart
 
 load_dotenv(override=True)
-logger = set_logger("coreFunctions")
+logger = set_logger("coreFunctions_commands")
 
 
 # basic "hard-coded" commands, these commands should'nt be deleted or disabled...
