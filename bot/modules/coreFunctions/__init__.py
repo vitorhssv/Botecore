@@ -9,7 +9,10 @@ if len(argv) > 1:
 
 if not database_update:
     this_module = import_module(".coreFunctions.commands", "modules")
-    handlers = [this_module.coreFunctions_start_handler]
+    handlers = [
+        this_module.coreFunctions_start_handler,
+        this_module.coreFunctions_restart_handler,
+    ]
 else:
     commands_defaults = [
         {
@@ -23,5 +26,21 @@ else:
                     "message": "Hello! I'm a bot, you probably already knew that...",
                 }
             ],
-        }
+        },
+        {
+            "command_id": "coreFunctions_restart",
+            "command_handler": "restart",
+            "command_description": "Restarts the bot to apply any changes",
+            "scope": "ownerOnly",
+            "messages": [
+                {
+                    "message_id": "coreFunctions_restarting_message",
+                    "message": "Restarting...",
+                },
+                {
+                    "message_id": "coreFunctions_restartError_message",
+                    "message": "Something went wrong while restarting :\\",
+                },
+            ],
+        },
     ]
