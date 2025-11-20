@@ -11,8 +11,9 @@ if not database_update:
     this_module = import_module(".coreFunctions.commands", "modules")
     handlers = [
         this_module.coreFunctions_start_handler,
-        this_module.coreFunctions_restart_handler,
+        this_module.coreFunctions_setCommands_handler,
         this_module.coreFunctions_resetCommands_handler,
+        this_module.coreFunctions_restart_handler,
     ]
 else:
     commands_defaults = [
@@ -20,7 +21,7 @@ else:
             "command_id": "coreFunctions_start",
             "command_handler": "start",
             "command_description": "Send an introduction to the bot",
-            "scope": "default",
+            "command_scope": "default",
             "messages": [
                 {
                     "message_id": "coreFunctions_start_message",
@@ -29,10 +30,26 @@ else:
             ],
         },
         {
+            "command_id": "coreFunctions_setCommands",
+            "command_handler": "set_commands",
+            "command_description": "Set the bot's commands",
+            "command_scope": "ownerOnly",
+            "messages": [
+                {
+                    "message_id": "coreFunctions_setCommands_message",
+                    "message": "The commands menu was updated!",
+                },
+                {
+                    "message_id": "coreFunctions_setCommandsError_message",
+                    "message": "Uhh... Something went wrong",
+                },
+            ],
+        },
+        {
             "command_id": "coreFunctions_resetCommands",
             "command_handler": "reset_commands",
             "command_description": "Deletes every command-related entry from the database",
-            "scope": "ownerOnly",
+            "command_scope": "ownerOnly",
             "messages": [
                 {
                     "message_id": "coreFunctions_resetCommands_message",
@@ -48,7 +65,7 @@ else:
             "command_id": "coreFunctions_restart",
             "command_handler": "restart",
             "command_description": "Restarts the bot to apply any changes",
-            "scope": "ownerOnly",
+            "command_scope": "ownerOnly",
             "messages": [
                 {
                     "message_id": "coreFunctions_restarting_message",

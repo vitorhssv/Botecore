@@ -97,7 +97,7 @@ try:
                     command_default["command_id"],
                     command_default["command_handler"],
                     command_default["command_description"],
-                    command_default["scope"],
+                    command_default["command_scope"],
                 ),
             )
 
