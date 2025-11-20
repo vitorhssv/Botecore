@@ -55,7 +55,7 @@ try:
             command_id TEXT PRIMARY KEY,
             command_handler TEXT UNIQUE,
             command_description TEXT,
-            scope TEXT NOT NULL
+            command_scope TEXT NOT NULL
         );
         """
     )
