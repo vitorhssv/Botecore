@@ -12,6 +12,7 @@ if not database_update:
     handlers = [
         this_module.coreFunctions_start_handler,
         this_module.coreFunctions_restart_handler,
+        this_module.coreFunctions_resetCommands_handler,
     ]
 else:
     commands_defaults = [
@@ -25,6 +26,22 @@ else:
                     "message_id": "coreFunctions_start_message",
                     "message": "Hello! I'm a bot, you probably already knew that...",
                 }
+            ],
+        },
+        {
+            "command_id": "coreFunctions_resetCommands",
+            "command_handler": "reset_commands",
+            "command_description": "Deletes every command-related entry from the database",
+            "scope": "ownerOnly",
+            "messages": [
+                {
+                    "message_id": "coreFunctions_resetCommands_message",
+                    "message": "The database is now clean! Restarting the bot to update the commands...",
+                },
+                {
+                    "message_id": "coreFunctions_resetCommandsError_message",
+                    "message": "Something went wrong :\\",
+                },
             ],
         },
         {

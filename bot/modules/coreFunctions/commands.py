@@ -18,6 +18,52 @@ async def coreFunctions_start(
     await update.message.reply_html(get_message("coreFunctions_start_message"))
 
 
+async def coreFunctions_resetCommands(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
+    """Deletes every command-related entry from the database"""
+    cached_reset_message = get_message("coreFunctions_resetCommands_message")
+
+    try:
+        # connect to the database
+        conn = sqlite3.connect(Path("botConfig.db"))
+        logger.info("Database connected/created")
+        cursor = conn.cursor()
+
+        # create tables
+        cursor.execute(
+            """
+            DELETE FROM commands WHERE 1;
+            """
+        )
+        cursor.execute(
+            """
+            DELETE FROM messages WHERE 1;
+            """
+        )
+
+        logger.info("Deleted every command-related entry from the database")
+
+        conn.commit()
+        await update.message.reply_html(cached_reset_message)
+
+    except sqlite3.Error as e:
+        # log error
+        logger.error(e)
+        await update.message.reply_html(
+            get_message("coreFunctions_resetCommandsError_message")
+        )
+    finally:
+        # close connection with the database
+        if "conn" in locals() and conn:
+            conn.close()
+            logger.info("Connection closed")
+        if not restart():
+            await update.message.reply_html(
+                get_message("coreFunctions_restartError_message")
+            )
+
+
 async def coreFunctions_restart(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> None:
