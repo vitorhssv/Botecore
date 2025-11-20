@@ -30,6 +30,7 @@ for module in modules:
     imported = import_module(f"modules.{module}")
     all_handlers.extend(imported.handlers)
     all_commands_defaults.extend(imported.commands_defaults)
+    logger.info(f"Information from the {module} module was imported")
 
 # database check & setup
 try:
@@ -45,11 +46,10 @@ try:
             command_id TEXT PRIMARY KEY,
             command_handler TEXT UNIQUE,
             command_description TEXT,
-            scope STR NOT NULL
+            scope TEXT NOT NULL
         );
         """
     )
-
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS messages (
