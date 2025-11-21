@@ -241,7 +241,9 @@ handlers = get_handlers()
 manage_permission_list_handler = ConversationHandler(
     entry_points=[
         CommandHandler(
-            handlers["coreFunctions:manage_permission_list"], manage_permission_list
+            handlers["coreFunctions:manage_permission_list"],
+            manage_permission_list,
+            filters=owner_only,
         )
     ],
     states={

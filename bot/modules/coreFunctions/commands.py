@@ -162,11 +162,15 @@ async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 handlers = get_handlers()
-start_handler = CommandHandler(handlers["coreFunctions:start"], start)
+start_handler = CommandHandler(
+    handlers["coreFunctions:start"], start, filters=authorized_only
+)
 set_commands_handler = CommandHandler(
-    handlers["coreFunctions:set_commands"], set_commands
+    handlers["coreFunctions:set_commands"], set_commands, filters=owner_only
 )
 reset_commands_handler = CommandHandler(
-    handlers["coreFunctions:reset_commands"], reset_commands
+    handlers["coreFunctions:reset_commands"], reset_commands, filters=owner_only
 )
-restart_handler = CommandHandler(handlers["coreFunctions:restart"], restart)
+restart_handler = CommandHandler(
+    handlers["coreFunctions:restart"], restart, filters=owner_only
+)

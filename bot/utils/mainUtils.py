@@ -26,7 +26,6 @@ if environ["BOT_IS_PUBLIC"] == "no":
     all_allowed_users = [item[0] for item in all_allowed_users_tuple] + [
         int(environ["OWNER_ID"])
     ]
-    print(all_allowed_users)
     authorized_only = filters.User(all_allowed_users)
 else:
     authorized_only = filters.ALL
