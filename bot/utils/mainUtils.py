@@ -1,7 +1,13 @@
 import logging
 import random
 import sqlite3
+from os import environ
 from pathlib import Path
+
+from dotenv import load_dotenv
+from telegram.ext import filters
+
+load_dotenv(override=True)
 
 
 def set_logger(module_name: str) -> logging.Logger:
@@ -10,6 +16,22 @@ def set_logger(module_name: str) -> logging.Logger:
 
 
 logger = set_logger("main_utils")
+
+# filter to only answer allowed users
+if environ["BOT_IS_PUBLIC"] == "no":
+    conn = sqlite3.connect(Path("botConfig.db"))
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM allowed WHERE 1;")
+    all_allowed_users_tuple = cursor.fetchall()
+    all_allowed_users = [item[0] for item in all_allowed_users_tuple] + [
+        int(environ["OWNER_ID"])
+    ]
+    print(all_allowed_users)
+    authorized_only = filters.User(all_allowed_users)
+else:
+    authorized_only = filters.ALL
+
+owner_only = filters.User(int(environ["OWNER_ID"]))
 
 
 def get_message(identifier: str, get_random: bool = False) -> str | None:
