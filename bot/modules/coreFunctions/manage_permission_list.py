@@ -192,17 +192,18 @@ async def remove_contacts_from_list(
         logger.info("Database connected")
         cursor = conn.cursor()
 
-        cursor.execute("SELECT * FROM allowed WHERE 1;")
+        cursor.execute("SELECT * FROM allowed WHERE 1 ORDER BY name ASC;")
         users_list = cursor.fetchall()
 
-        to_remove = map(int, update.message.text.split(" "))
+        to_remove_tuple = update.message.text.split(" ")
+        to_remove = [item[0] for item in to_remove_tuple]
 
         for index in to_remove:
-            if index == 1:
-                index = 0
-            else:
-                index -= 1
-            cursor.execute("DELETE FROM allowed WHERE id = ?", (users_list[index][0],))
+            real_index = int(index) - 1
+            cursor.execute(
+                "DELETE FROM allowed WHERE id = ?",
+                (users_list[real_index][0],),
+            )
 
         conn.commit()
     except sqlite3.Error as e:
