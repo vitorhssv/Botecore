@@ -47,6 +47,10 @@ else:
                     "message_id": "coreFunctions:set_commands_error_message",
                     "message": "Uhh... Something went wrong",
                 },
+                {
+                    "message_id": "coreFunctions:setting_commands",
+                    "message": "Alright! Working on it...",
+                },
             ],
         },
         {

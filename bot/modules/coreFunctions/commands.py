@@ -12,6 +12,7 @@ from telegram import (
     BotCommandScopeChat,
     BotCommandScopeDefault,
     Update,
+    error,
 )
 from telegram.ext import CommandHandler, ContextTypes
 from utils import *
@@ -30,6 +31,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def set_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Set the bot's commands"""
+    await update.message.reply_html(get_message("coreFunctions:setting_commands"))
     scopes = [
         "default",
         "ownerOnly",
@@ -92,7 +94,7 @@ async def set_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                 commands=commands_list, scope=command_scope
             )
             logger.info(f"Commands with {scope} scope added to the commands list")
-    except sqlite3.Error as e:
+    except (sqlite3.Error, error.BadRequest) as e:
         # log error
         logger.error(e)
         await update.message.reply_html(

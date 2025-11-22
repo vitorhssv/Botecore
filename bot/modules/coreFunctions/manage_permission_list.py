@@ -252,7 +252,9 @@ manage_permission_list_handler = ConversationHandler(
             MessageHandler(filters.Regex("(?i)^(remove)$"), remove_from_list_request),
         ],
         ADD_CONTACTS: [MessageHandler(filters.USER, add_contacts_to_list)],
-        REMOVE_CONTACTS: [MessageHandler(filters.TEXT, remove_contacts_from_list)],
+        REMOVE_CONTACTS: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, remove_contacts_from_list)
+        ],
     },
     fallbacks=[CommandHandler(handlers["coreFunctions:cancel"], cancel)],
 )
