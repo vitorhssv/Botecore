@@ -42,7 +42,7 @@ async def set_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             BotCommandScopeAllPrivateChats(),
             BotCommandScopeAllChatAdministrators(),
             BotCommandScopeAllGroupChats(),
-            BotCommandScopeChat(environ["OWNER"]),
+            BotCommandScopeChat(environ["OWNER_ID"]),
             BotCommandScopeDefault(),
         ]
         for this_scope in all_scopes:
@@ -62,7 +62,7 @@ async def set_commands(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             commands_list = []
 
             if scope == "ownerOnly":
-                command_scope = BotCommandScopeChat(environ["OWNER"])
+                command_scope = BotCommandScopeChat(environ["OWNER_ID"])
             elif scope == "default":
                 command_scope = BotCommandScopeDefault()
             elif scope == "allPrivateChats":
