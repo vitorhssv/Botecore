@@ -12,12 +12,14 @@ if not database_update:
     manage_permission_list = import_module(
         ".coreFunctions.manage_permission_list", "modules"
     )
+    edit_commands = import_module(".coreFunctions.edit_commands", "modules")
     handlers = [
         commands.start_handler,
         commands.set_commands_handler,
         commands.reset_commands_handler,
         commands.restart_handler,
         manage_permission_list.manage_permission_list_handler,
+        edit_commands.edit_commands_handler,
     ]
 else:
     commands_defaults = [
@@ -150,6 +152,66 @@ else:
                 {
                     "message_id": "coreFunctions:cancel",
                     "message": "Command cancelled!",
+                },
+            ],
+        },
+        {
+            "command_id": "coreFunctions:skip",
+            "command_handler": "skip",
+            "command_description": "Skips the step in a conversation",
+            "command_scope": "nobody",
+            "messages": [
+                {
+                    "message_id": "coreFunctions:skip_step",
+                    "message": "Skipping to the next step!",
+                },
+            ],
+        },
+        {
+            "command_id": "coreFunctions:edit_commands",
+            "command_handler": "edit_commands",
+            "command_description": "Edits the commands",
+            "command_scope": "ownerOnly",
+            "messages": [
+                {
+                    "message_id": "coreFunctions:choose_command",
+                    "message": "Choose a command from the list!\n\nYou can /cancel this if you want to",
+                },
+                {
+                    "message_id": "coreFunctions:choice_doesnt_exist",
+                    "message": "Uhhh... This id doesn't exist :/",
+                },
+                {
+                    "message_id": "coreFunctions:send_new_handler",
+                    "message": "Send me the new handler for this command\nCommand handlers should have less than 32 characters and only use letters from a-z (lowercase) and underlines.\n\nIf you don't want to change it, you can /skip to the next step\n\nYou can /cancel this if you want to",
+                },
+                {
+                    "message_id": "coreFunctions:send_new_description",
+                    "message": "Send me the new description for this command\nCommand descriptions should have less than 256 characters.\n\nIf you don't want to change it, you can /skip to the next step\n\nYou can /cancel this if you want to",
+                },
+                {
+                    "message_id": "coreFunctions:description_too_long",
+                    "message": "Oops... This description is too long.",
+                },
+                {
+                    "message_id": "coreFunctions:handler_too_long",
+                    "message": "Oops... This handler is too long.",
+                },
+                {
+                    "message_id": "coreFunctions:invalid_handler",
+                    "message": "I can't use this handler... Remember, only use letters from a-z (lowercase) and underlines.",
+                },
+                {
+                    "message_id": "coreFunctions:choose_message",
+                    "message": "Alright, choose a message to edit\n\nIf you don't want to change it, you can /skip to the next step\n\nYou can /cancel this if you want to",
+                },
+                {
+                    "message_id": "coreFunctions:send_new_message",
+                    "message": "Send me the new message for this command\nYou can use HTML tags to format the text!\n\nIf you don't want to change it, you can /skip to the next step\n\nYou can /cancel this if you want to",
+                },
+                {
+                    "message_id": "coreFunctions:edit_finished",
+                    "message": "Great! Editing is done by now. You might have to send /restart for the handlers to update, if you just edited the messages then it's all already working!",
                 },
             ],
         },
