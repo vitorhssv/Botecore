@@ -7,6 +7,8 @@ The [wiki page](https://github.com/vitorhssv/Botecore/wiki) has a *small documen
 
 There's a [repository](https://github.com/vitorhssv/Botecore-Modules) with *some modules*² I've made for this, feel free to check it and add them to your own bot! 
 
+You can check the [changelog](https://github.com/vitorhssv/Botecore/CHANGELOG.md) to see what changed!
+
 ###### ¹ *It's not really magic... It's actually python. sorry.*
 ###### ² *Depending on when you're seeing this there might be empty pages in the wiki and/or no modules on the repository. If that's the case, come back later!*
 ###### *This project is under active³ development and breaking changes will most surely be done*
